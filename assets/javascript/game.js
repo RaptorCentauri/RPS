@@ -1,6 +1,5 @@
 // Intialize Firebase
 
-    // ready: $.Deferred(function (){return true;}),
 
 
   var config = {
@@ -43,19 +42,52 @@ var players = {
 };
 
 
-
-console.log(p1ready.state());
-
-console.log(players.playerOne.ready);
-
-console.log(typeof(players.playerOne.ready));
+console.log(players);
 
 database.ref().set(players);
-// database.ref().set(p1ready);
-// database.ref().set(p2ready);
 
 
-console.log(players);
+//listen to firebase//
+
+var readyOneRef = database.ref(`playerOne/ready`);
+readyOneRef.on(`value`, function(snapshot){
+  console.log(`P1 ready: ` + snapshot.val());
+  // players.playerOne.ready = snapshot.val();
+  if(snapshot.val() != `pending`){
+    p1ready = snapshot.val();    
+  }
+    
+});
+
+
+var choiceOneRef = database.ref(`playerOne/choice`);
+choiceOneRef.on(`value`, function(snapshot){
+  console.log(`P1 choice: ` + snapshot.val());
+  players.playerOne.choice = snapshot.val();  
+});
+
+
+
+var readyTwoRef = database.ref(`playerTwo/ready`);
+readyTwoRef.on(`value`, function(snapshot){
+  console.log(`P2 ready: ` + snapshot.val());
+  // players.playerTwo.ready = snapshot.val();
+  if(snapshot.val() != `pending`){
+    p2ready = snapshot.val();    
+  }
+});
+
+
+var choiceTwoRef = database.ref(`playerTwo/choice`);
+choiceTwoRef.on(`value`, function(snapshot){
+  console.log(`P2 choice: ` + snapshot.val());
+  players.playerTwo.choice = snapshot.val();    
+
+});
+
+
+
+
 
 // Promise
 //==========================================================
@@ -80,20 +112,21 @@ console.log(players);
   $(document.body).on("click", ".rock-button", function(){
 
     if($(this).hasClass("playerOne")){
-      console.log(`P1 clicked rock`);
       players.playerOne.choice = `rock`;
       p1ready.resolve();
+      players.playerOne.ready = p1ready.state();
       database.ref().set(players);
-      console.log(players.playerOne.choice);
-
+      // console.log(`p1 choice: ` + players.playerOne.choice);
+      // console.log(`p1 ready: ` + players.playerOne.ready);
     }
 
     if($(this).hasClass("playerTwo")){
-      console.log(`P2 clicked rock`);
       players.playerTwo.choice = `rock`;
       p2ready.resolve();
+      players.playerTwo.ready = p2ready.state();
       database.ref().set(players);
-      console.log(players);
+      console.log(`p2 choice: ` + players.playerTwo.choice);
+      // console.log(`p2 ready: ` + players.playerTwo.ready);
     }
    
   })
@@ -102,20 +135,22 @@ console.log(players);
   $(document.body).on("click", ".paper-button", function(){
 
     if($(this).hasClass("playerOne")){
-      console.log(`P1 clicked paper`);
       players.playerOne.choice = `paper`;
       p1ready.resolve();
-      console.log(players);
+      players.playerOne.ready = p1ready.state();
       database.ref().set(players);
+      // console.log(`p1 choice: ` + players.playerOne.choice);
+      // console.log(`p1 ready: ` + players.playerOne.ready);
     }
 
     if($(this).hasClass("playerTwo")){
-      console.log(`P2 clicked paper`);
       players.playerTwo.choice = `paper`;
-      // players.playerTwo.ready.resolve();
+      players.playerTwo.ready = p2ready.state();
       p2ready.resolve();
+      players.playerTwo.ready = p2ready.state();
       database.ref().set(players);
-      console.log(players);
+      // console.log(`p2 choice: ` + players.playerTwo.choice);
+      // console.log(`p2 ready: ` + players.playerTwo.ready);
     }
 
     
@@ -124,30 +159,38 @@ console.log(players);
   $(document.body).on("click", ".scissors-button", function(){
 
     if($(this).hasClass("playerOne")){
-      console.log(`P1 clicked scissors`);
       players.playerOne.choice = `scissors`;
       p1ready.resolve();
-      console.log(players);
+      players.playerOne.ready = p1ready.state();
       database.ref().set(players);
+      // console.log(`p1 choice: ` + players.playerOne.choice);
+      // console.log(`p1 ready: ` + players.playerOne.ready);
     }
 
     if($(this).hasClass("playerTwo")){
-      console.log(`P2 clicked scissors`);
       players.playerTwo.choice = `scissors`;
+      players.playerTwo.ready = p2ready.state();
       p2ready.resolve();
+      players.playerTwo.ready = p2ready.state();
       database.ref().set(players);
-      console.log(players);
+      // console.log(`p2 choice: ` + players.playerTwo.choice);
+      // console.log(`p2 ready: ` + players.playerTwo.ready);
     }
     
   })
 
 // ===========================================
 
+//listen to FB
+
+
+
+//======================
+
 
 //Game logic
 
-
-function playGame(p1, p2){
+  function playGame(p1, p2){
 
     //Tie Game
     if(p1 === p2){
@@ -181,7 +224,7 @@ function playGame(p1, p2){
     else if(p2 === `scissors` && p1 === `paper`){
       console.log(`Player two wins!`);
     }
-}
+  }
   
   
 
