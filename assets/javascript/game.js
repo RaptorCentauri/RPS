@@ -1,3 +1,18 @@
+
+// TO-DOs=============================================================================================
+
+//Score is not persistant in firebase -- needs fix.
+//figure out how to assign player1 or player2 so only one set of buttons will show on screen.
+
+
+
+
+
+//=====================================================================================================
+
+
+
+
 // Intialize Firebase
 
 
