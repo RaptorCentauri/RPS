@@ -21,9 +21,12 @@
 
 // Set Player names
 
-$(`#nameButton`).on("click", function(){
-  $(`#name`).html($(`#playerName`).val().trim());
-})
+// $(`#nameButton`).on("click", function(){
+//   $(`#name`).html($(`#playerName`).val().trim());
+// })
+
+playerOneScore = 0;
+playerTwoScore = 0;
 
 
 p1ready = $.Deferred();
@@ -34,12 +37,14 @@ var players = {
 
   playerOne: {
     name: "First Player",
+    score: playerOneScore,
     choice: null,
     present: false,
   },
 
   playerTwo: {
     name: "Second Player",
+    score:playerTwoScore,
     choice: null,
     present: false,
   },
@@ -49,7 +54,7 @@ var players = {
 database.ref().set(players);
 
 var choiceOneRef = database.ref(`playerOne/choice`);
-var playerOnePresentRef = database.ref(`playerOne/present`);
+// var playerOnePresentRef = database.ref(`playerOne/present`);
 
 
 
@@ -121,8 +126,6 @@ choiceTwoRef.on(`value`, function(snapshot){
       }
 
 
-
-
       if($(this).hasClass("playerTwo")){
         players.playerTwo.choice = `rock`;
         database.ref(`playerTwo/choice`).set(players.playerTwo.choice);
@@ -180,36 +183,65 @@ choiceTwoRef.on(`value`, function(snapshot){
       //Rock Wins
       else if(p1 === `rock` && p2 === `scissors`){
         console.log(`Player one wins!`);
+        players.playerOne.score++;
+        database.ref(`playerOne/score`).set(players.playerOne.score);
+        $(`#pOneScore`).html(players.playerOne.score);
         $(`#winner`).html(`Player one wins!`);
-
       }
 
       else if(p2 === `rock` && p1 === `scissors`){
         console.log(`Player two wins!`);
+        players.playerTwo.score++;
+        database.ref(`playerTwo/score`).set(players.playerTwo.score);
+        $(`#pTwoScore`).html(players.playerTwo.score);
         $(`#winner`).html(`Player two wins!`);
       }
 
       //Paper Wins
       else if(p1 === `paper` && p2 === `rock`){
         console.log(`Player one wins!`);
+        players.playerOne.score++;
+        database.ref(`playerOne/score`).set(players.playerOne.score);
+        $(`#pOneScore`).html(players.playerOne.score);
         $(`#winner`).html(`Player one wins!`);
+
       }
 
       else if(p2 === `paper` && p1 === `rock`){
         console.log(`Player two wins!`);
+        players.playerTwo.score++;
+        database.ref(`playerTwo/score`).set(players.playerTwo.score);
+        $(`#pTwoScore`).html(players.playerTwo.score);
         $(`#winner`).html(`Player two wins!`);
       }
 
       //Scissors wins
       else if(p1 === `scissors` && p2 === `paper`){
         console.log(`Player one wins!`);
+        players.playerOne.score++;
+        database.ref(`playerOne/score`).set(players.playerOne.score);
+        $(`#pOneScore`).html(players.playerOne.score);
         $(`#winner`).html(`Player one wins!`);
       }
 
+
       else if(p2 === `scissors` && p1 === `paper`){
         console.log(`Player two wins!`);
+        players.playerTwo.score++;
+        database.ref(`playerTwo/score`).set(players.playerTwo.score);
+        $(`#pTwoScore`).html(players.playerTwo.score);
         $(`#winner`).html(`Player two wins!`);
       }
+
+
+      database.ref(`playerOne/choice`).set(null);
+      database.ref(`playerTwo/choice`).set(null);
+
+      console.log()
+
+      p1ready = $.Deferred();
+      p2ready = $.Deferred();
+
     }
 
   //==============================================
